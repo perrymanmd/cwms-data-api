@@ -101,6 +101,7 @@ import cwms.cda.api.UpstreamLocationsGetController;
 import cwms.cda.api.auth.ApiKeyController;
 import cwms.cda.api.auth.users.UserProfileController;
 import cwms.cda.api.auth.users.UsersController;
+import cwms.cda.api.auth.userlists.UserListMembersController;
 import cwms.cda.api.auth.users.roles.AddRoleController;
 import cwms.cda.api.auth.users.roles.DeleteRolesController;
 import cwms.cda.api.auth.users.roles.GetRolesController;
@@ -645,6 +646,7 @@ public class ApiServlet extends HttpServlet {
         crud("/users/{user-name}", new UsersController(metrics), adminRoles);
         get("/roles", new GetRolesController(metrics), adminRoles);
         get("/user/profile", new UserProfileController(metrics), userRoles);
+        get("/user/list/{user-list-id}/members", new UserListMembersController(metrics), adminRoles);
         post("/user/{user-name}/roles/{office-id}", new AddRoleController(metrics), adminRoles);
         delete("/user/{user-name}/roles/{office-id}", new DeleteRolesController(metrics), adminRoles);
         
