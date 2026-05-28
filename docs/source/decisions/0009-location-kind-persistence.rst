@@ -12,7 +12,7 @@ Problem Statement
 
 CWMS locations can embody multiple roles (e.g., a physical site that is both an Embankment and a Stream Location). Currently, changing a location's Kind in ``AT_PHYSICAL_LOCATION`` generally requires a corresponding row in the specialized ``AT_<?>`` table. If the row does not exist, the operation may fail or the Kind may not be properly updated.
 
-The concept of "Marker Kinds"—where a Kind is set in ``AT_PHYSICAL_LOCATION`` as a functional indicator without requiring immediate population of specialized metadata—is not currently supported. This ADR addresses how such a system would work, allowing for more flexible location management and preventing data orphans or loss of specialized metadata during transitions.
+The concept of "Marker Kinds"—where a Kind is set in ``AT_PHYSICAL_LOCATION`` as a functional indicator without requiring immediate population of specialized metadata—is not currently supported. This ADR addresses how such a system would work, allowing for more flexible location management and preventing loss of specialized metadata during transitions.
 
 Location Kind and Table Mapping
 ===============================
@@ -87,14 +87,14 @@ The following table defines the required and allowed associations between Locati
      - X
      -
      -
-     -
-     -
+     - A
+     - A
      - X
      -
      -
      -
      -
-     -
+     - A
      -
      -
      -
@@ -102,14 +102,14 @@ The following table defines the required and allowed associations between Locati
      - X
      -
      -
-     -
+     - A
      -
      -
      - X
      -
      -
      -
-     -
+     - A
      -
      -
      -
@@ -124,7 +124,7 @@ The following table defines the required and allowed associations between Locati
      - X
      -
      -
-     -
+     - A
      -
      -
      -
@@ -139,7 +139,7 @@ The following table defines the required and allowed associations between Locati
      -
      - X
      -
-     -
+     - A
      -
      -
      -
@@ -147,23 +147,23 @@ The following table defines the required and allowed associations between Locati
      - X
      -
      -
-     -
-     -
+     - A
+     - A
      -
      -
      -
      -
      - X
+     - A
      -
      -
-     -
-     -
+     - A
    * - STREAM_LOCATION
      - X
      -
      -
-     -
-     -
+     - A
+     - A
      -
      -
      -
@@ -183,8 +183,8 @@ The following table defines the required and allowed associations between Locati
      -
      - X
      -
-     -
-     -
+     - A
+     - A
      -
      -
      -
@@ -200,7 +200,7 @@ The following table defines the required and allowed associations between Locati
      -
      -
      - X
-     -
+     - A
      -
      -
    * - STREAM_GAGE
@@ -217,7 +217,7 @@ The following table defines the required and allowed associations between Locati
      -
      - X
      -
-     -
+     - A
    * - STREAM_REACH
      - X
      -
@@ -237,13 +237,13 @@ The following table defines the required and allowed associations between Locati
      - X
      -
      -
+     - A
+     - A
+     -
+     - A
      -
      -
-     -
-     -
-     -
-     -
-     -
+     - A
      -
      - X
      -
@@ -253,7 +253,7 @@ The following table defines the required and allowed associations between Locati
      -
      -
      - X
-     -
+     - A
      -
      -
      -
@@ -267,7 +267,7 @@ The following table defines the required and allowed associations between Locati
      - X
      -
      -
-     -
+     - A
      - X
      -
      -
@@ -281,7 +281,8 @@ The following table defines the required and allowed associations between Locati
 
 **Legend:**
 - **X**: Required in the current system. Under the proposed Marker system, this indicates the table where metadata *would* reside if the Kind is more than just a marker.
-- (Blank): Not Allowed or Not Applicable for the primary definition of the Kind.
+- **A**: Allowed.
+- (Blank): Not Allowed.
 
 Terminology
 ===========
@@ -302,7 +303,7 @@ Kind Transitions
 API Endpoint Expectations
 -------------------------
 1. **Filtering by Kind**: The general Location endpoint (getAll) should filter based on the Kind marker in ``AT_PHYSICAL_LOCATION``.
-2. **Specialized Endpoints**: Kind-specific endpoints (e.g., ``/projects``, ``/streams``) must decide whether to return "marker-only" (orphan) locations.
+2. **Specialized Endpoints**: Kind-specific endpoints (e.g., ``/projects``, ``/streams``) must decide whether to return "marker-only" locations.
     - *Proposed*: A "marker-project" should be visible to the project endpoint, but may return null or default values for specialized fields if the ``AT_PROJECT`` row is missing.
 3. **Workflow**: Defining a complex Kind (like a Project) involves two steps:
     - Establishing the identity and Marker via the Location endpoint.
