@@ -6,7 +6,7 @@ Location Kind Persistence and Metadata
 Summary
 =======
 
-This ADR documents the issue where storing a Location with a set KIND does not always respect that KIND, often defaulting to ``SITE``, and discusses the implications of "marker" kinds and metadata retention.
+This ADR documents the behavior and relationship between general location endpoints and kind-specific endpoints (e.g., Stream, Project), specifically addressing how storing a Location with a set KIND acts as a "marker" and the implications for metadata retention.
 
 
 Problem Statement
@@ -22,13 +22,15 @@ However, this transition can lead to loss of context or missing metadata. For ex
 The location endpoint currently lacks the ability to denote all kinds that a single location might embody, leading to incomplete metadata representation.
 
 
-Proposed Goals
-==============
+Proposed Goals and Behavioral Expectations
+=========================================
 
-1. **Respect Explicit Kind**: Ensure that if a KIND is explicitly set during storage, it is preserved and respected by the system.
-2. **Handle Marker Kinds**: Recognize and correctly handle "marker" kinds (like ``PROJECT``) without losing underlying location identity (like being a stream location).
-3. **Identify Incomplete Metadata**: Provide a mechanism to identify which locations do not have all their expected metadata filled out.
-4. **Metadata Density**: It is acceptable for some metadata to be missing or stubbed initially, provided there is a way to denote the state of the location's metadata.
+1. **Location Endpoint as Marker**: The general location endpoint is responsible for establishing the primary identity and "KIND" marker for a location.
+2. **Kind-Specific Endpoint Responsibility**: Metadata and database rows specific to a KIND (like stream or project details) are the responsibility of their respective specialized endpoints.
+3. **Respect Explicit Kind**: Ensure that if a KIND is explicitly set during storage at the location endpoint, it is preserved and respected as the primary marker.
+4. **Handle Marker Kinds**: Recognize and correctly handle "marker" kinds (like ``PROJECT``) without losing underlying location identity (like being a stream location).
+5. **Identify Incomplete Metadata**: Provide a mechanism to identify which locations do not have all their expected metadata filled out.
+6. **Metadata Density**: It is acceptable for some metadata to be missing or stubbed initially, provided there is a way to denote the state of the location's metadata.
 
 
 Key Considerations
@@ -56,6 +58,9 @@ Key Considerations
    * - Stubbing
      - Stubbing missing info is an acceptable short-term solution.
      - Allows the API to remain functional while identifying where more detailed metadata is required.
+   * - Endpoint Responsibility
+     - Location endpoints establish the KIND as a marker. Kind-specific endpoints (e.g., Stream, Project) handle detailed metadata.
+     - Clearly separates general location identity from specialized metadata management.
 
 
 Example Scenario
