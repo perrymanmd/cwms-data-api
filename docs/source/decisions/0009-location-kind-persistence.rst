@@ -290,10 +290,6 @@ Marker
 ------
 A location is "marked" as a specific Kind in the ``AT_PHYSICAL_LOCATION`` table, but may or may not have the corresponding metadata rows in specialized tables yet. The Kind in ``AT_PHYSICAL_LOCATION`` serves as the primary functional role indicator.
 
-Orphan
-------
-An "orphan" occurs when a location's Kind is designated (e.g., as a ``PROJECT``), but no corresponding row exists in the kind-specific metadata table (e.g., ``AT_PROJECT``). While functionally a "marker," this state may be considered incomplete for certain API operations.
-
 Behavioral Rules
 ================
 
