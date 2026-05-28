@@ -10,7 +10,9 @@ This ADR defines the relationship between the general Location identity and spec
 Problem Statement
 =================
 
-CWMS locations can embody multiple roles (e.g., a physical site that is both a Stream Gage and a Weather Gage). Currently, the transition between these kinds is not always well-defined, leading to potential data orphans or loss of specialized metadata. We need a clear policy on how the "KIND" column in ``AT_PHYSICAL_LOCATION`` interacts with specialized tables like ``AT_STREAM`` or ``AT_PROJECT``.
+CWMS locations can embody multiple roles (e.g., a physical site that is both a Stream Gage and a Weather Gage). Currently, changing a location's Kind in ``AT_PHYSICAL_LOCATION`` generally requires a corresponding row in the specialized ``AT_<?>`` table. If the row does not exist, the operation may fail or the Kind may not be properly updated.
+
+The concept of "Marker Kinds"—where a Kind is set in ``AT_PHYSICAL_LOCATION`` as a functional indicator without requiring immediate population of specialized metadata—is not currently supported. This ADR addresses how such a system would work, allowing for more flexible location management and preventing data orphans or loss of specialized metadata during transitions.
 
 Location Kind and Table Mapping
 ===============================
@@ -278,7 +280,7 @@ The following table defines the required and allowed associations between Locati
      -
 
 **Legend:**
-- **X**: Required (The presence of this Kind requires a row in the corresponding table).
+- **X**: Required in the current system. Under the proposed Marker system, this indicates the table where metadata *would* reside if the Kind is more than just a marker.
 - (Blank): Not Allowed or Not Applicable for the primary definition of the Kind.
 
 Terminology
@@ -297,8 +299,9 @@ Behavioral Rules
 
 Kind Transitions
 ----------------
-1. **New Rows Required**: Changing a Location's Kind in ``AT_PHYSICAL_LOCATION`` should generally require the creation of a new row in the corresponding ``AT_<?>`` table if it doesn't already exist.
-2. **Preservation of Existing Data**: Storing a new Kind marker should not automatically delete existing metadata from other kind-specific tables. A location that was a ``STREAM_GAGE`` and is now marked as a ``PROJECT`` should ideally retain its gage metadata unless explicitly removed.
+1. **Current Behavior (New Rows Required)**: Currently, changing a Location's Kind in ``AT_PHYSICAL_LOCATION`` requires the creation of a new row in the corresponding ``AT_<?>`` table if it doesn't already exist.
+2. **Proposed Marker Support**: Under the proposed Marker system, the Kind in ``AT_PHYSICAL_LOCATION`` can be updated independently. If no specialized metadata row exists, the location is considered a "Marker" of that Kind.
+3. **Preservation of Existing Data**: Storing a new Kind marker should not automatically delete existing metadata from other kind-specific tables. A location that was a ``STREAM_GAGE`` and is now marked as a ``PROJECT`` should retain its gage metadata unless explicitly removed.
 
 API Endpoint Expectations
 -------------------------
@@ -320,6 +323,11 @@ Decision Status
 ===============
 
 (Status: proposed)
+
+Notes on Current State
+======================
+
+The current behavior of the CWMS Data API and the underlying database procedures is that a location's Kind is tightly coupled with its specialized metadata. If a user attempts to change the Kind to ``PROJECT`` via the location endpoint, but no row exists in ``AT_PROJECT``, the system may revert to ``SITE`` or fail to update as expected. This ADR serves as a blueprint for decoupling these concepts to support "Marker Kinds".
 
 References
 ==========
