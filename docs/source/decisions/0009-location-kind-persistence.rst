@@ -10,7 +10,7 @@ This ADR defines the relationship between the general Location identity and spec
 Problem Statement
 =================
 
-CWMS locations can embody multiple roles (e.g., a physical site that is both a Stream Gage and a Stream Location). Currently, changing a location's Kind in ``AT_PHYSICAL_LOCATION`` generally requires a corresponding row in the specialized ``AT_<?>`` table. If the row does not exist, the operation may fail or the Kind may not be properly updated.
+CWMS locations can embody multiple roles (e.g., a physical site that is both an Embankment and a Stream Location). Currently, changing a location's Kind in ``AT_PHYSICAL_LOCATION`` generally requires a corresponding row in the specialized ``AT_<?>`` table. If the row does not exist, the operation may fail or the Kind may not be properly updated.
 
 The concept of "Marker Kinds"—where a Kind is set in ``AT_PHYSICAL_LOCATION`` as a functional indicator without requiring immediate population of specialized metadata—is not currently supported. This ADR addresses how such a system would work, allowing for more flexible location management and preventing data orphans or loss of specialized metadata during transitions.
 
