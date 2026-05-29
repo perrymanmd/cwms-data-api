@@ -24,6 +24,11 @@ Current System Mapping (Physical Coupling)
 
 In the current system, a location's Kind is tightly coupled with its specialized metadata. The following table defines the required and allowed associations.
 
+Database Mapping:
+^^^^^^^^^^^^^^^^^
+
+The kind of a location is determined by the ``LOCATION_KIND`` column in the ``AT_PHYSICAL_LOCATION`` table. This column contains a numeric code that maps to the ``LOCATION_KIND_CODE`` column in the ``CWMS_LOCATION_KIND`` table. The ``CWMS_LOCATION_KIND`` table also contains a ``LOCATION_KIND_ID`` column, which provides the human-readable string representation of the location kind (e.g., "PROJECT", "STREAM_GAGE").
+
 .. list-table:: Location Kind to Table Mapping
    :header-rows: 1
    :stub-columns: 1
