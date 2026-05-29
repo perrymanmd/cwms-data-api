@@ -579,17 +579,15 @@ API Endpoint Expectations
 -------------------------
 1. **Filtering by Kind**: The general Location endpoint (getAll) should filter based on the Kind marker in ``AT_PHYSICAL_LOCATION``.
 2. **Specialized Endpoints**: Kind-specific endpoints (e.g., ``/projects``, ``/streams``) must decide whether to return "marker-only" locations.
-    - *Proposed*: A "marker-project" should be visible to the project endpoint, but may return null or default values for specialized fields if the ``AT_PROJECT`` row is missing.
-3. **Workflow**: Defining a complex Kind (like a Project) involves two steps:
-    - Establishing the identity and Marker via the Location endpoint.
-    - Populating specialized metadata via the Kind-specific endpoint.
+    - *Proposed*: A "marker-project" should: <TODO>
 
 Implementation Strategy
 =======================
 
-1. **Database Procedures**: Leverage existing CWMS database procedures for storing locations and kinds, ensuring they handle the cross-table logic correctly.
-2. **CDA Endpoints**: Update CDA controllers to respect the marker-based filtering and handle "sparse" metadata gracefully.
-3. **Risk Mitigation**: Ensure that existing applications expecting "complete" rows in specialized tables are not broken by the introduction of marker-only entries.
+Risks
+=======================
+1. **Data Integrity**: Allowing Kinds to exist without corresponding metadata rows may lead to confusion or misuse if not properly documented and handled in the API.
+2. **Existing Clients**: Changes to the behavior of Kind updates may impact existing clients that expect the current coupling of Kind and metadata. Clear communication and versioning will be necessary.
 
 Decision Status
 ===============
