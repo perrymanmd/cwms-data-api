@@ -10,14 +10,19 @@ This ADR defines the relationship between the general Location identity and spec
 Problem Statement
 =================
 
-CWMS locations can embody multiple roles (e.g., a physical site that is both an Embankment and a Stream Location). Currently, changing a location's Kind in ``AT_PHYSICAL_LOCATION`` generally requires a corresponding row in the specialized ``AT_<?>`` table. If the row does not exist, the operation may fail or the Kind may not be properly updated.
+CWMS locations can embody multiple roles (e.g., a physical site that is both an Embankment and a Stream Location). Currently, changing a location's Kind in ``AT_PHYSICAL_LOCATION`` generally requires a corresponding row in the specialized ``AT_<KIND>`` table. If the row does not exist, the operation may fail or the Kind may not be properly updated.
 
 The concept of "Marker Kinds"—where a Kind is set in ``AT_PHYSICAL_LOCATION`` as a functional indicator without requiring immediate population of specialized metadata—is not currently supported. This ADR addresses how such a system would work, allowing for more flexible location management and preventing loss of specialized metadata during transitions.
 
 Location Kind and Table Mapping
 ===============================
 
-The following table defines the required and allowed associations between Location Kinds and database tables.
+The following tables define the relationship between Location Kinds and database tables under the current and proposed systems.
+
+Current System Mapping (Physical Coupling)
+------------------------------------------
+
+In the current system, a location's Kind is tightly coupled with its specialized metadata. The following table defines the required and allowed associations.
 
 .. list-table:: Location Kind to Table Mapping
    :header-rows: 1
@@ -279,9 +284,279 @@ The following table defines the required and allowed associations between Locati
      -
      -
 
-**Legend:**
-- **X**: Required in the current system. Under the proposed Marker system, this indicates the table where metadata *would* reside if the Kind is more than just a marker.
-- **A**: Allowed.
+**Legend (Current System):**
+- **X**: Required. The specialized metadata row must exist for this Kind to be valid.
+- **A**: Allowed. Optional metadata row.
+- (Blank): Not Allowed.
+
+Proposed Marker System Mapping (Decoupled Labeling)
+---------------------------------------------------
+
+Under the proposed Marker system, the Kind in ``AT_PHYSICAL_LOCATION`` acts as a label. The presence of specialized metadata in ``AT_<KIND>`` tables is optional (Allowed) for all Kinds, as the "Marker" itself is sufficient for the identity.
+
+.. list-table:: Proposed Marker System Mapping
+   :header-rows: 1
+   :stub-columns: 1
+
+   * - Location Kind
+     - AT_PHYSICAL_LOCATION
+     - AT_STREAM
+     - AT_BASIN
+     - AT_GAGE
+     - AT_ENTITY
+     - AT_PROJECT
+     - AT_EMBANKMENT
+     - AT_OUTLET
+     - AT_TURBINE
+     - AT_LOCK
+     - AT_OVERFLOW
+     - AT_STREAM_LOCATION
+     - AT_STREAM_REACH
+     - AT_PUMP
+   * - SITE
+     - X
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+   * - STREAM
+     - X
+     - A
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+   * - BASIN
+     - X
+     -
+     - A
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+   * - PROJECT
+     - X
+     -
+     -
+     - A
+     - A
+     - A
+     -
+     -
+     -
+     -
+     - A
+     -
+     -
+     -
+   * - EMBANKMENT
+     - X
+     -
+     -
+     - A
+     -
+     -
+     - A
+     -
+     -
+     -
+     - A
+     -
+     -
+     -
+   * - OUTLET
+     - X
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+     -
+     - A
+     -
+     -
+     -
+   * - TURBINE
+     - X
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+     - A
+     -
+     -
+     -
+   * - LOCK
+     - X
+     -
+     -
+     - A
+     - A
+     -
+     -
+     -
+     -
+     - A
+     - A
+     -
+     -
+     - A
+   * - STREAM_LOCATION
+     - X
+     -
+     -
+     - A
+     - A
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+     -
+   * - GATE
+     - X
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+     - A
+     - A
+     -
+     -
+     -
+   * - OVERFLOW
+     - X
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+     -
+     - A
+     - A
+     -
+     -
+   * - STREAM_GAGE
+     - X
+     -
+     -
+     - A
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+     - A
+   * - STREAM_REACH
+     - X
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     - A
+     -
+   * - PUMP
+     - X
+     -
+     -
+     - A
+     - A
+     -
+     - A
+     -
+     -
+     - A
+     -
+     - A
+     -
+     - A
+   * - WEATHER_GAGE
+     - X
+     -
+     -
+     - A
+     - A
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+   * - ENTITY
+     - X
+     -
+     -
+     - A
+     - A
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+     -
+
+**Legend (Marker System):**
+- **X**: Required. The location must exist in ``AT_PHYSICAL_LOCATION``.
+- **A**: Allowed. The metadata row is optional; its absence results in a "Marker-only" location.
 - (Blank): Not Allowed.
 
 Terminology
@@ -296,7 +571,7 @@ Behavioral Rules
 
 Kind Transitions
 ----------------
-1. **Current Behavior (New Rows Required)**: Currently, changing a Location's Kind in ``AT_PHYSICAL_LOCATION`` requires the creation of a new row in the corresponding ``AT_<?>`` table if it doesn't already exist.
+1. **Current Behavior (New Rows Required)**: Currently, changing a Location's Kind in ``AT_PHYSICAL_LOCATION`` requires the creation of a new row in the corresponding ``AT_<KIND>`` table if it doesn't already exist.
 2. **Proposed Marker Support**: Under the proposed Marker system, the Kind in ``AT_PHYSICAL_LOCATION`` can be updated independently. If no specialized metadata row exists, the location is considered a "Marker" of that Kind.
 3. **Preservation of Existing Data**: Storing a new Kind marker should not automatically delete existing metadata from other kind-specific tables. A location that was a ``STREAM_GAGE`` and is now marked as a ``PROJECT`` should retain its gage metadata unless explicitly removed.
 
