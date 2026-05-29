@@ -562,9 +562,31 @@ Under the proposed Marker system, the Kind in ``AT_PHYSICAL_LOCATION`` acts as a
 Terminology
 ===========
 
+Location Kind Hierarchy
+-----------------------
+
+.. code-block:: text
+
+    SITE
+    ├── BASIN
+    ├── STREAM
+    ├── STREAM_REACH
+    ├── STREAM_LOCATION
+    │   ├── STREAM_GAGE
+    │   └── PUMP
+    ├── WEATHER_GAGE
+    ├── PROJECT
+    ├── EMBANKMENT
+    ├── ENTITY
+    ├── LOCK
+    ├── TURBINE
+    └── OUTLET
+        ├── GATE
+        └── OVERFLOW
+
 Marker
 ------
-A location is "marked" as a specific Kind in the ``AT_PHYSICAL_LOCATION`` table, but may or may not have the corresponding metadata rows in specialized tables yet. The Kind in ``AT_PHYSICAL_LOCATION`` serves as the primary functional role indicator.
+A location is "marked" as a specific Kind in the ``AT_PHYSICAL_LOCATION`` table, but does not have the corresponding metadata rows in specialized tables yet. The Kind in ``AT_PHYSICAL_LOCATION`` serves as the primary functional role indicator. It is no longer considered a marker-kind once the specialized kind-metadata is added to the corresponding kind table.
 
 Behavioral Rules
 ================
@@ -573,11 +595,11 @@ Kind Transitions
 ----------------
 1. **Current Behavior (New Rows Required)**: Currently, changing a Location's Kind in ``AT_PHYSICAL_LOCATION`` requires the creation of a new row in the corresponding ``AT_<KIND>`` table if it doesn't already exist.
 2. **Proposed Marker Support**: Under the proposed Marker system, the Kind in ``AT_PHYSICAL_LOCATION`` can be updated independently. If no specialized metadata row exists, the location is considered a "Marker" of that Kind.
-3. **Preservation of Existing Data**: Storing a new Kind marker should not automatically delete existing metadata from other kind-specific tables. A location that was a ``STREAM_GAGE`` and is now marked as a ``PROJECT`` should retain its gage metadata unless explicitly removed.
+3. **Preservation of Existing Data**: Storing a new Kind marker should not automatically delete existing metadata from other kind-specific tables. A location that was a ``STREAM_GAGE`` and is now marked as a ``PROJECT`` should retain its gage metadata unless explicitly removed. If transitioned to a ``SITE`` does this mean all metadata is lost? <TODO>
 
 API Endpoint Expectations
 -------------------------
-1. **Filtering by Kind**: The general Location endpoint (getAll) should filter based on the Kind marker in ``AT_PHYSICAL_LOCATION``.
+1. **Filtering by Kind**: The general Location endpoint (getAll) should filter based on the Kind marker in ``AT_PHYSICAL_LOCATION``. This will not query against any at_<KIND> tables (This should be handled by kind-specified endpoints).
 2. **Specialized Endpoints**: Kind-specific endpoints (e.g., ``/projects``, ``/streams``) must decide whether to return "marker-only" locations.
     - *Proposed*: A "marker-project" should: <TODO>
 
