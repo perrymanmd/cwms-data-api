@@ -30,6 +30,7 @@ Some decisions may also be a proposal and marked appropriately.
     JMS Queue Message Structure <./0011-queue-messages.rst>
     Vertical Datum Storage <./0012-vertical-datum-storage.rst>
     CDA User Lists <./0013-cda-user-lists.md>
-    Data Event Message Formats - Forecasts <./0014-queue-messages-forecast.rst>
-    Data Event Message Formats - Ratings <./0015-queue-messages-rating.rst>
-    Data Event Message Formats - Levels <./0016-queue-messages-levels.rst>
+    Data Event Message Formats - Forecasts <./0014-data-event-messages-forecast.rst>
+    Data Event Message Formats - Ratings <./0015-data-event-messages-rating.rst>
+    Data Event Message Formats - Levels <./0016-data-event-messages-levels.rst>
+    Data Event Message Formats - Streams <./0017-data-event-messages-streams.rst>
