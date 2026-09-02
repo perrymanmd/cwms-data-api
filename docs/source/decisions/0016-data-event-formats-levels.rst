@@ -6,7 +6,7 @@ Data Event Formats - Levels
 Summary
 =======
 
-CWMS needs a message structure to notify clients of location level-related events.
+CWMS needs an message structure to notify clients of location level-related events.
 
 Opinions
 ========
