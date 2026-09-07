@@ -34,3 +34,4 @@ Some decisions may also be a proposal and marked appropriately.
     Data Event Message Formats - Ratings <./0015-data-event-messages-rating.rst>
     Data Event Message Formats - Levels <./0016-data-event-messages-levels.rst>
     Data Event Message Formats - Streams <./0017-data-event-messages-streams.rst>
+    Data Event Message Formats - Entities <./0018-data-event-formats-entities.rst>
