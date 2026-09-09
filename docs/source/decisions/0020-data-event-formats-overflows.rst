@@ -57,7 +57,7 @@ Only "type", "office_id", "overflow_id", and  "project_id" are required.
     {
       "type": "overflow_created",
       "office_id": "SWT",
-      "overflow_id": "Greenbrier.Emergency Spillway",
+      "overflow_id": "Greenbrier-Emergency Spillway",
       "project_id": "Greenbrier",
       "crest_elevation": 923.5,
       "elevation_unit": "ft",
@@ -103,7 +103,7 @@ Only "type", "office_id", "overflow_id", and  "project_id" are required.
     {
       "type": "overflow_updated",
       "office_id": "SWT",
-      "overflow_id": "Greenbrier.Emergency Spillway",
+      "overflow_id": "Greenbrier-Emergency Spillway",
       "project_id": "Greenbrier",
       "crest_elevation": 923.5,
       "elevation_unit": "ft",
@@ -133,7 +133,7 @@ Only "type", "office_id", "overflow_id", and  "project_id" are required.
     {
       "type": "overflow_deleted",
       "office_id": "SWT",
-      "overflow_id": "Greenbrier.Emergency Spillway"
+      "overflow_id": "Greenbrier-Emergency Spillway"
     }
 
 

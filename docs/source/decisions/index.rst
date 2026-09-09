@@ -37,3 +37,4 @@ Some decisions may also be a proposal and marked appropriately.
     Data Event Message Formats - Entities <./0018-data-event-formats-entities.rst>
     Data Event Message Formats - Embankments <./0019-data-event-formats-embankments.rst>
     Data Event Message Formats - Overflows <./0020-data-event-formats-overflows.rst>
+    Data Event Message Formats - Locks <./0021-data-event-formats-locks.rst>
